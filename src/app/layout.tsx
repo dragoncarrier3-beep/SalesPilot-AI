@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "SalesPilot AI — Sales Copilot",
   description:
     "AI-powered sales copilot for meeting prep, transcript analysis, objection detection, and next-best actions.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
