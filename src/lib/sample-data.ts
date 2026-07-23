@@ -1,0 +1,636 @@
+import type {
+  Company,
+  Contact,
+  DiscoverySession,
+  FollowUpAsset,
+  Meeting,
+  ProspectReport,
+  TranscriptAnalysis,
+} from "./types";
+
+export const COMPANIES: Company[] = [
+  {
+    id: "c1",
+    name: "HubSpot",
+    industry: "Marketing Technology",
+    dealSize: 120000,
+    stage: "Negotiation",
+    contactId: "ct1",
+    contactName: "Priya Shah",
+    painPoints: ["Fragmented sales tooling", "Low adoption of coaching workflows"],
+    competitors: ["Salesforce", "Gong"],
+    notes: "Evaluating SalesPilot for AE enablement across NA enterprise team.",
+    riskScore: 38,
+    winProbability: 72,
+    lastMeeting: "2026-07-18",
+    aiSummary: "Strong ROI interest; needs security review and pilot success metrics.",
+    nextFollowUp: "2026-07-24",
+  },
+  {
+    id: "c2",
+    name: "Stripe",
+    industry: "Fintech",
+    dealSize: 185000,
+    stage: "Proposal",
+    contactId: "ct2",
+    contactName: "Daniel Okonkwo",
+    painPoints: ["Inconsistent deal reviews", "Missed buying signals"],
+    competitors: ["Clari", "Chorus"],
+    notes: "Wants transcript analysis tied into Salesforce opportunities.",
+    riskScore: 45,
+    winProbability: 64,
+    lastMeeting: "2026-07-16",
+    aiSummary: "Budget aligned; legal wants DPA + SOC2 package before signature.",
+    nextFollowUp: "2026-07-23",
+  },
+  {
+    id: "c3",
+    name: "Dropbox",
+    industry: "Cloud Collaboration",
+    dealSize: 95000,
+    stage: "Demo",
+    contactId: "ct3",
+    contactName: "Elena Vargas",
+    painPoints: ["New AE ramp time", "Weak objection handling"],
+    competitors: ["Gong", "Lavender"],
+    notes: "Pilot scoped to 25 AEs in commercial segment.",
+    riskScore: 52,
+    winProbability: 58,
+    lastMeeting: "2026-07-14",
+    aiSummary: "Excited about live coaching; concerned about change management.",
+    nextFollowUp: "2026-07-25",
+  },
+  {
+    id: "c4",
+    name: "Atlassian",
+    industry: "Developer Tools",
+    dealSize: 210000,
+    stage: "Qualification",
+    contactId: "ct4",
+    contactName: "James Whitfield",
+    painPoints: ["Forecast accuracy", "Manager coaching bandwidth"],
+    competitors: ["Clari", "Salesforce Einstein"],
+    notes: "Multi-product expansion opportunity if pilot succeeds.",
+    riskScore: 41,
+    winProbability: 61,
+    lastMeeting: "2026-07-12",
+    aiSummary: "Champion identified; needs economic buyer intro next week.",
+    nextFollowUp: "2026-07-26",
+  },
+  {
+    id: "c5",
+    name: "Notion",
+    industry: "Productivity Software",
+    dealSize: 78000,
+    stage: "Discovery",
+    contactId: "ct5",
+    contactName: "Sofia Mendes",
+    painPoints: ["Inconsistent discovery quality", "Poor follow-up cadence"],
+    competitors: ["HubSpot AI", "Attention"],
+    notes: "Early-stage conversation with RevOps and Sales Enablement.",
+    riskScore: 55,
+    winProbability: 48,
+    lastMeeting: "2026-07-10",
+    aiSummary: "Good pain alignment; still mapping stakeholders and timeline.",
+    nextFollowUp: "2026-07-27",
+  },
+  {
+    id: "c6",
+    name: "Canva",
+    industry: "Design Software",
+    dealSize: 140000,
+    stage: "Proposal",
+    contactId: "ct6",
+    contactName: "Liam Foster",
+    painPoints: ["Global team coaching consistency", "Language localization"],
+    competitors: ["Gong", "Fireflies"],
+    notes: "APAC rollout discussed; English-first pilot preferred.",
+    riskScore: 36,
+    winProbability: 69,
+    lastMeeting: "2026-07-17",
+    aiSummary: "Procurement engaged; pricing comparison requested vs Gong.",
+    nextFollowUp: "2026-07-24",
+  },
+  {
+    id: "c7",
+    name: "Figma",
+    industry: "Design Collaboration",
+    dealSize: 110000,
+    stage: "Demo",
+    contactId: "ct7",
+    contactName: "Aisha Rahman",
+    painPoints: ["Missed upsell signals", "Long sales cycles"],
+    competitors: ["Clari", "Gong"],
+    notes: "Interested in next-best-action recommendations for expansion deals.",
+    riskScore: 48,
+    winProbability: 57,
+    lastMeeting: "2026-07-15",
+    aiSummary: "Demo feedback positive; wants CRM writeback proof in trial.",
+    nextFollowUp: "2026-07-28",
+  },
+  {
+    id: "c8",
+    name: "Salesforce",
+    industry: "CRM / Enterprise Software",
+    dealSize: 320000,
+    stage: "Negotiation",
+    contactId: "ct8",
+    contactName: "Robert Hale",
+    painPoints: ["Overlapping AI tooling", "Need measurable lift in win rate"],
+    competitors: ["Einstein", "Gong"],
+    notes: "Strategic account — emphasize integration with Salesforce native workflows.",
+    riskScore: 62,
+    winProbability: 44,
+    lastMeeting: "2026-07-19",
+    aiSummary: "High scrutiny on differentiation; case studies required this week.",
+    nextFollowUp: "2026-07-23",
+  },
+  {
+    id: "c9",
+    name: "Monday.com",
+    industry: "Work Management",
+    dealSize: 88000,
+    stage: "Qualification",
+    contactId: "ct9",
+    contactName: "Nora Klein",
+    painPoints: ["Low discovery completion", "Weak pipeline hygiene"],
+    competitors: ["HubSpot", "Clari"],
+    notes: "RevOps wants standardized pre-meeting briefs.",
+    riskScore: 43,
+    winProbability: 63,
+    lastMeeting: "2026-07-11",
+    aiSummary: "Clear use case; waiting on Q3 budget confirmation.",
+    nextFollowUp: "2026-07-29",
+  },
+  {
+    id: "c10",
+    name: "Linear",
+    industry: "Project Management",
+    dealSize: 54000,
+    stage: "Discovery",
+    contactId: "ct10",
+    contactName: "Chris Park",
+    painPoints: ["Small team ramp", "Inconsistent messaging"],
+    competitors: ["Lavender", "Attention"],
+    notes: "Lean GTM team looking for lightweight AI coaching.",
+    riskScore: 34,
+    winProbability: 71,
+    lastMeeting: "2026-07-13",
+    aiSummary: "Fast-moving; can close on quarterly plan if pilot is frictionless.",
+    nextFollowUp: "2026-07-25",
+  },
+  {
+    id: "c11",
+    name: "Acme Manufacturing",
+    industry: "Industrial Automation",
+    dealSize: 85000,
+    stage: "Demo",
+    contactId: "ct11",
+    contactName: "Karen Brooks",
+    painPoints: ["Implementation time", "Operator adoption", "Legacy vendor lock-in"],
+    competitors: ["Siemens MindSphere", "Rockwell"],
+    notes: "Classic industrial buyer with ROI and change-management concerns.",
+    riskScore: 49,
+    winProbability: 59,
+    lastMeeting: "2026-07-20",
+    aiSummary: "Budget + implementation objections dominant; open to phased pilot.",
+    nextFollowUp: "2026-07-24",
+  },
+  {
+    id: "c12",
+    name: "Datadog",
+    industry: "Observability",
+    dealSize: 165000,
+    stage: "Proposal",
+    contactId: "ct12",
+    contactName: "Marcus Lee",
+    painPoints: ["Complex buying committees", "Long technical evaluations"],
+    competitors: ["Gong", "Clari"],
+    notes: "Wants objection library tailored to platform engineering buyers.",
+    riskScore: 40,
+    winProbability: 66,
+    lastMeeting: "2026-07-09",
+    aiSummary: "Technical win likely; commercial negotiation starting.",
+    nextFollowUp: "2026-07-26",
+  },
+  {
+    id: "c13",
+    name: "Shopify",
+    industry: "E-commerce",
+    dealSize: 132000,
+    stage: "Negotiation",
+    contactId: "ct13",
+    contactName: "Hannah Cole",
+    painPoints: ["Merchant success handoffs", "Follow-up quality variance"],
+    competitors: ["HubSpot AI", "Lavender"],
+    notes: "Strong champion in Sales Ops; CFO asks for 90-day ROI model.",
+    riskScore: 33,
+    winProbability: 74,
+    lastMeeting: "2026-07-18",
+    aiSummary: "Late-stage deal; send ROI calculator + reference call.",
+    nextFollowUp: "2026-07-23",
+  },
+  {
+    id: "c14",
+    name: "Twilio",
+    industry: "Communications Platform",
+    dealSize: 98000,
+    stage: "Demo",
+    contactId: "ct14",
+    contactName: "Omar Hassan",
+    painPoints: ["High talk-to-close variance", "Weak competitive positioning"],
+    competitors: ["Gong", "Chorus"],
+    notes: "Interested in live coaching for outbound pods.",
+    riskScore: 47,
+    winProbability: 55,
+    lastMeeting: "2026-07-08",
+    aiSummary: "Demo booked with enablement; need competitive battlecard.",
+    nextFollowUp: "2026-07-30",
+  },
+  {
+    id: "c15",
+    name: "Zendesk",
+    industry: "Customer Experience",
+    dealSize: 150000,
+    stage: "Qualification",
+    contactId: "ct15",
+    contactName: "Grace Kim",
+    painPoints: ["Cross-sell discovery gaps", "Manager coaching scale"],
+    competitors: ["Clari", "Salesforce Einstein"],
+    notes: "Evaluating for CS + Sales hybrid teams.",
+    riskScore: 50,
+    winProbability: 52,
+    lastMeeting: "2026-07-07",
+    aiSummary: "Use case expanding; clarify success metrics before demo.",
+    nextFollowUp: "2026-07-28",
+  },
+];
+
+export const CONTACTS: Contact[] = [
+  { id: "ct1", name: "Priya Shah", title: "VP Sales Enablement", email: "priya.shah@hubspot.com", companyId: "c1" },
+  { id: "ct2", name: "Daniel Okonkwo", title: "Director of Revenue Ops", email: "daniel.o@stripe.com", companyId: "c2" },
+  { id: "ct3", name: "Elena Vargas", title: "Head of Sales", email: "elena.v@dropbox.com", companyId: "c3" },
+  { id: "ct4", name: "James Whitfield", title: "CRO", email: "j.whitfield@atlassian.com", companyId: "c4" },
+  { id: "ct5", name: "Sofia Mendes", title: "Sales Ops Manager", email: "sofia.m@notion.so", companyId: "c5" },
+  { id: "ct6", name: "Liam Foster", title: "Global Enablement Lead", email: "liam.f@canva.com", companyId: "c6" },
+  { id: "ct7", name: "Aisha Rahman", title: "Enterprise AE Manager", email: "aisha.r@figma.com", companyId: "c7" },
+  { id: "ct8", name: "Robert Hale", title: "VP Strategic Sourcing", email: "robert.hale@salesforce.com", companyId: "c8" },
+  { id: "ct9", name: "Nora Klein", title: "RevOps Director", email: "nora.k@monday.com", companyId: "c9" },
+  { id: "ct10", name: "Chris Park", title: "Head of GTM", email: "chris.park@linear.app", companyId: "c10" },
+  { id: "ct11", name: "Karen Brooks", title: "COO", email: "karen.brooks@acmemfg.com", companyId: "c11" },
+  { id: "ct12", name: "Marcus Lee", title: "VP Sales", email: "marcus.lee@datadoghq.com", companyId: "c12" },
+  { id: "ct13", name: "Hannah Cole", title: "Sales Ops Lead", email: "hannah.cole@shopify.com", companyId: "c13" },
+  { id: "ct14", name: "Omar Hassan", title: "Outbound Manager", email: "omar.h@twilio.com", companyId: "c14" },
+  { id: "ct15", name: "Grace Kim", title: "Director CS Ops", email: "grace.kim@zendesk.com", companyId: "c15" },
+  { id: "ct16", name: "Tom Bradley", title: "IT Director", email: "tom.b@hubspot.com", companyId: "c1" },
+  { id: "ct17", name: "Maya Singh", title: "Security Lead", email: "maya.s@stripe.com", companyId: "c2" },
+  { id: "ct18", name: "Ben Torres", title: "Enablement Manager", email: "ben.t@dropbox.com", companyId: "c3" },
+  { id: "ct19", name: "Olivia Grant", title: "Procurement", email: "olivia.g@atlassian.com", companyId: "c4" },
+  { id: "ct20", name: "Ryan Cooper", title: "AE", email: "ryan.c@notion.so", companyId: "c5" },
+  { id: "ct21", name: "Ivy Chen", title: "Finance Partner", email: "ivy.c@canva.com", companyId: "c6" },
+  { id: "ct22", name: "Sam Patel", title: "Solutions Architect", email: "sam.p@figma.com", companyId: "c7" },
+  { id: "ct23", name: "Nina Brooks", title: "Product Ops", email: "nina.b@salesforce.com", companyId: "c8" },
+  { id: "ct24", name: "Jake Morris", title: "AE Manager", email: "jake.m@monday.com", companyId: "c9" },
+  { id: "ct25", name: "Leah Scott", title: "Founder's Associate", email: "leah.s@linear.app", companyId: "c10" },
+  { id: "ct26", name: "Paul Nguyen", title: "Plant Manager", email: "paul.n@acmemfg.com", companyId: "c11" },
+  { id: "ct27", name: "Diana Cruz", title: "Enablement", email: "diana.c@datadoghq.com", companyId: "c12" },
+  { id: "ct28", name: "Ethan Ward", title: "Merchant Success", email: "ethan.w@shopify.com", companyId: "c13" },
+  { id: "ct29", name: "Fatima Ali", title: "RevOps Analyst", email: "fatima.a@twilio.com", companyId: "c14" },
+  { id: "ct30", name: "Hugh Barnes", title: "VP Customer Success", email: "hugh.b@zendesk.com", companyId: "c15" },
+  { id: "ct31", name: "Iris Doyle", title: "Champion AE", email: "iris.d@hubspot.com", companyId: "c1" },
+  { id: "ct32", name: "Jon Ellis", title: "Legal Counsel", email: "jon.e@stripe.com", companyId: "c2" },
+  { id: "ct33", name: "Kate Young", title: "CFO Advisor", email: "kate.y@dropbox.com", companyId: "c3" },
+  { id: "ct34", name: "Leo Adams", title: "Sales Engineer", email: "leo.a@atlassian.com", companyId: "c4" },
+  { id: "ct35", name: "Mia Torres", title: "Onboarding Lead", email: "mia.t@notion.so", companyId: "c5" },
+  { id: "ct36", name: "Ned Quinn", title: "Regional Director", email: "ned.q@canva.com", companyId: "c6" },
+  { id: "ct37", name: "Opal Ruiz", title: "Buyer Committee", email: "opal.r@figma.com", companyId: "c7" },
+  { id: "ct38", name: "Pete Shaw", title: "Architecture Lead", email: "pete.s@salesforce.com", companyId: "c8" },
+  { id: "ct39", name: "Quinn Hale", title: "Pilot Owner", email: "quinn.h@monday.com", companyId: "c9" },
+  { id: "ct40", name: "Rita Moss", title: "Success Metrics Owner", email: "rita.m@linear.app", companyId: "c10" },
+];
+
+export const TODAY_MEETINGS: Meeting[] = [
+  { id: "m1", company: "Acme Manufacturing", contact: "Karen Brooks", time: "10:00 AM", type: "Discovery Call", stage: "Demo" },
+  { id: "m2", company: "Stripe", contact: "Daniel Okonkwo", time: "1:30 PM", type: "Proposal Review", stage: "Proposal" },
+  { id: "m3", company: "Shopify", contact: "Hannah Cole", time: "3:00 PM", type: "ROI Workshop", stage: "Negotiation" },
+  { id: "m4", company: "Canva", contact: "Liam Foster", time: "4:45 PM", type: "Security Review", stage: "Proposal" },
+];
+
+export const DEMO_TRANSCRIPT = `Sales Rep:
+Thanks for joining, Karen. Tell me about your biggest operational challenge right now.
+
+Customer:
+Our biggest concern is implementation time and whether our team can adopt the system quickly. We've been burned before by tools that sat unused.
+
+Sales Rep:
+We've reduced onboarding time by 40% for similar industrial customers. Most teams are productive within three weeks.
+
+Customer:
+Budget is another concern. Leadership wants a clear ROI story before we expand beyond a pilot.
+
+Sales Rep:
+Understood. We typically start with a 45-day pilot tied to two KPIs — time-to-first-value and opportunity hygiene.
+
+Customer:
+That sounds promising. We're also locked into our current vendor until December, so timing matters.
+
+Sales Rep:
+Got it. We can plan a phased rollout that overlaps your renewal window.
+
+Customer:
+I'd like to see a customer case study from manufacturing, and maybe involve our plant manager in the next call.
+
+Sales Rep:
+Absolutely. I can send those today and propose a technical demo next week.
+
+Customer:
+Great. If the timeline and training look solid, we'd be open to a pilot in Q3.`;
+
+const industries = [
+  "Marketing Technology",
+  "Fintech",
+  "Cloud Collaboration",
+  "Developer Tools",
+  "Productivity Software",
+  "Design Software",
+  "CRM / Enterprise Software",
+  "Work Management",
+  "Industrial Automation",
+  "Observability",
+];
+
+export const PROSPECT_REPORTS: ProspectReport[] = COMPANIES.slice(0, 15).map((c, i) => ({
+  id: `pr${i + 1}`,
+  companyId: c.id,
+  company: c.name,
+  contact: c.contactName,
+  industry: c.industry,
+  dealSize: c.dealSize,
+  stage: c.stage,
+  createdAt: `2026-07-${String(20 - (i % 12)).padStart(2, "0")}`,
+  executiveSummary: `${c.name} is evaluating SalesPilot to improve ${c.painPoints[0].toLowerCase()}. Deal size is $${c.dealSize.toLocaleString()} at ${c.stage}. Champion ${c.contactName} is engaged; primary risks are ${c.competitors.slice(0, 2).join(" and ")} comparison and change adoption.`,
+  challenges: c.painPoints,
+  stakeholders: [
+    c.contactName,
+    "Economic Buyer (CFO / CRO)",
+    "RevOps / Enablement",
+    "Security / IT",
+  ],
+  objections: [
+    "Budget timing and ROI proof",
+    "Integration with existing CRM stack",
+    "Team adoption and training load",
+    `Competitive pressure from ${c.competitors[0]}`,
+  ],
+  discoveryQuestions: [
+    `How are you currently measuring ${c.painPoints[0].toLowerCase()}?`,
+    "What does a successful pilot look like in 45 days?",
+    "Who else needs to be involved in the buying decision?",
+    "When does your current vendor contract renew?",
+    "What stalled previous enablement investments?",
+  ],
+  competitiveRisks: c.competitors.map(
+    (comp) => `${comp} may be preferred if feature parity and brand familiarity outweigh speed-to-value.`
+  ),
+  positioning: [
+    "Lead with time-to-insight and actionable coaching, not raw call recording volume",
+    "Emphasize CRM-native next-best-actions for managers and AEs",
+    "Differentiate with pre-meeting intelligence + post-call follow-up generation",
+  ],
+  valueProposition: `Help ${c.name} raise win rates by detecting objections earlier, standardizing discovery quality, and giving managers coaching leverage without adding meetings.`,
+  upsell: [
+    "Manager coaching workspace",
+    "Enterprise analytics pack",
+    "Custom objection library for industry vertical",
+  ],
+  winProbability: c.winProbability,
+  riskLevel: c.riskScore >= 55 ? "High" : c.riskScore >= 40 ? "Medium" : "Low",
+}));
+
+const objectionPools = [
+  ["Budget", "Implementation", "Training"],
+  ["Integration", "Security", "Timeline"],
+  ["Vendor lock-in", "ROI proof", "Change management"],
+  ["Pricing", "Data privacy", "Manager bandwidth"],
+];
+
+const signalPools = [
+  ["Interested in ROI", "Open to pilot", "Asked for case study"],
+  ["Concerned about timeline", "Wants technical demo", "Involving additional stakeholder"],
+  ["Requested pricing comparison", "Asked about onboarding", "Positive sentiment on coaching"],
+  ["Mentioned renewal window", "Aligned on KPIs", "Ready for security review"],
+];
+
+export const TRANSCRIPT_ANALYSES: TranscriptAnalysis[] = Array.from({ length: 30 }, (_, i) => {
+  const company = COMPANIES[i % COMPANIES.length];
+  const objections = objectionPools[i % objectionPools.length];
+  const buyingSignals = signalPools[i % signalPools.length];
+  const confidence = 62 + ((i * 7) % 28);
+  return {
+    id: `ta${i + 1}`,
+    company: company.name,
+    contact: company.contactName,
+    date: `2026-07-${String((i % 20) + 1).padStart(2, "0")}`,
+    duration: `${28 + (i % 25)} min`,
+    objections,
+    buyingSignals,
+    positiveSentiment: [
+      "Expressed interest in measurable outcomes",
+      "Appreciated structured pilot approach",
+      "Open to involving additional stakeholders",
+    ],
+    negativeSentiment: [
+      "Concern about team adoption",
+      "Pressure on budget approval timing",
+    ],
+    decisionMakerConfidence: 55 + ((i * 5) % 35),
+    missedOpportunities: [
+      "Did not quantify success metrics",
+      "Did not confirm decision timeline",
+      "Did not ask about current vendor contract end date",
+    ],
+    recommendedFollowUp: [
+      "Send manufacturing/enterprise case study",
+      "Propose technical demo with plant/ops stakeholder",
+      "Share 45-day pilot plan with KPIs",
+    ],
+    recommendedEmail: `Hi ${company.contactName.split(" ")[0]},\n\nGreat speaking today about improving ${company.painPoints[0].toLowerCase()} at ${company.name}. Based on our conversation, I recommend a 45-day pilot focused on discovery quality and objection handling.\n\nI'll send a case study, implementation timeline, and proposed next-meeting agenda.\n\nBest,\nAlex`,
+    nextMeetingAgenda: [
+      "Review pilot success metrics",
+      "Walk through implementation timeline",
+      "Address security / CRM integration questions",
+      "Align on commercial next steps",
+    ],
+    confidenceScore: confidence,
+    talkRatio: { rep: 42 + (i % 18), customer: 58 - (i % 18) },
+    sentiment: 58 + ((i * 3) % 30),
+    nextActions: {
+      high: [
+        "Schedule technical demo",
+        "Send implementation timeline",
+        "Share customer case study",
+      ],
+      medium: ["Send ROI calculator", "Provide security documentation"],
+      low: ["Share pricing comparison", "Offer Loom walkthrough"],
+    },
+  };
+});
+
+export const FOLLOW_UPS: FollowUpAsset[] = [
+  {
+    id: "f1",
+    company: "Acme Manufacturing",
+    type: "email",
+    subject: "Next steps + manufacturing case study",
+    body: "Hi Karen,\n\nThanks for the candid conversation on implementation and ROI. Attached is a manufacturing case study and a 45-day pilot outline tied to time-to-first-value.\n\nWould Tue/Wed next week work for a technical demo with your plant manager?\n\nBest,\nAlex",
+    createdAt: "2026-07-20",
+  },
+  {
+    id: "f2",
+    company: "Stripe",
+    type: "email",
+    subject: "Salesforce writeback + DPA package",
+    body: "Hi Daniel,\n\nAs discussed, sharing the Salesforce opportunity writeback overview and our DPA/SOC2 package for legal review.\n\nHappy to join a 20-min security walkthrough this week.\n\nBest,\nAlex",
+    createdAt: "2026-07-19",
+  },
+  {
+    id: "f3",
+    company: "Shopify",
+    type: "email",
+    subject: "90-day ROI model for SalesPilot",
+    body: "Hi Hannah,\n\nHere's the 90-day ROI model based on your AE count and current win-rate baseline. Happy to refine assumptions with Finance.\n\nBest,\nAlex",
+    createdAt: "2026-07-18",
+  },
+  {
+    id: "f4",
+    company: "Canva",
+    type: "linkedin",
+    subject: "LinkedIn follow-up",
+    body: "Hi Liam — enjoyed the enablement discussion. If helpful, I can share how teams run English-first pilots before APAC localization. Open to a quick chat?",
+    createdAt: "2026-07-17",
+  },
+  {
+    id: "f5",
+    company: "HubSpot",
+    type: "crm",
+    subject: "CRM notes",
+    body: "Champion: Priya Shah. Pain: fragmented coaching workflows. Next: security review + pilot metrics. Risk: Gong comparison. Win prob: 72%.",
+    createdAt: "2026-07-18",
+  },
+  {
+    id: "f6",
+    company: "Dropbox",
+    type: "recap",
+    subject: "Meeting recap",
+    body: "Discussed AE ramp and objection handling. Positive on live coaching. Concern: change management. Action: send enablement playbook and pilot scope for 25 AEs.",
+    createdAt: "2026-07-14",
+  },
+  {
+    id: "f7",
+    company: "Figma",
+    type: "email",
+    subject: "CRM writeback proof for trial",
+    body: "Hi Aisha,\n\nSharing a short Loom of Salesforce writeback + sample next-best-action payload for your trial checklist.\n\nBest,\nAlex",
+    createdAt: "2026-07-15",
+  },
+  {
+    id: "f8",
+    company: "Atlassian",
+    type: "email",
+    subject: "Intro request to economic buyer",
+    body: "Hi James,\n\nTo keep momentum, could we include your economic buyer in next week's forecast/coaching discussion?\n\nBest,\nAlex",
+    createdAt: "2026-07-12",
+  },
+  {
+    id: "f9",
+    company: "Linear",
+    type: "linkedin",
+    subject: "Quick pilot idea",
+    body: "Chris — for lean GTM teams we usually run a 2-week lightweight pilot. Happy to outline a frictionless setup if useful.",
+    createdAt: "2026-07-13",
+  },
+  {
+    id: "f10",
+    company: "Datadog",
+    type: "crm",
+    subject: "CRM notes",
+    body: "Technical win progressing. Commercial negotiation next. Send architecture one-pager and competitive objection responses.",
+    createdAt: "2026-07-09",
+  },
+  {
+    id: "f11",
+    company: "Monday.com",
+    type: "email",
+    subject: "Pre-meeting brief template",
+    body: "Hi Nora,\n\nAttached is the standardized pre-meeting brief template RevOps asked for, plus a sample filled for one active opportunity.\n\nBest,\nAlex",
+    createdAt: "2026-07-11",
+  },
+  {
+    id: "f12",
+    company: "Twilio",
+    type: "recap",
+    subject: "Demo prep recap",
+    body: "Outbound pods want live coaching. Prepare competitive battlecard vs Gong/Chorus and talk-ratio coaching examples.",
+    createdAt: "2026-07-08",
+  },
+];
+
+export const DISCOVERY_SESSIONS: DiscoverySession[] = Array.from({ length: 20 }, (_, i) => {
+  const c = COMPANIES[i % COMPANIES.length];
+  return {
+    id: `ds${i + 1}`,
+    company: c.name,
+    contact: c.contactName,
+    date: `2026-07-${String((i % 18) + 1).padStart(2, "0")}`,
+    questionsAsked: 6 + (i % 7),
+    coverage: 58 + ((i * 4) % 35),
+    outcome: i % 3 === 0 ? "Advanced to Demo" : i % 3 === 1 ? "Needs follow-up" : "Stakeholder mapping",
+  };
+});
+
+export const ADMIN_STATS = {
+  users: 48,
+  analysesGenerated: 312,
+  transcriptsUploaded: 186,
+  averageAiScore: 78,
+  topIndustries: [
+    { name: "SaaS / Software", value: 34 },
+    { name: "Fintech", value: 18 },
+    { name: "Industrial", value: 14 },
+    { name: "E-commerce", value: 12 },
+    { name: "Other", value: 22 },
+  ],
+  commonObjections: [
+    { name: "Budget / ROI", value: 28 },
+    { name: "Implementation", value: 21 },
+    { name: "Integration", value: 17 },
+    { name: "Security", value: 14 },
+    { name: "Training", value: 12 },
+  ],
+  averageWinProbability: 61,
+};
+
+export const AI_INSIGHTS = [
+  {
+    title: "Budget objections rising",
+    detail: "Budget/ROI objections appeared in 41% of analyzed calls this week — up 9pts.",
+    tone: "warning" as const,
+  },
+  {
+    title: "Pilot openness is high",
+    detail: "12 of 18 late-stage prospects signaled openness to a structured pilot.",
+    tone: "positive" as const,
+  },
+  {
+    title: "Missed success metrics",
+    detail: "AEs skipped success-metric questions in 37% of discovery calls.",
+    tone: "warning" as const,
+  },
+  {
+    title: "Shopify deal momentum",
+    detail: "Win probability moved 74% after ROI workshop; send reference call this week.",
+    tone: "positive" as const,
+  },
+];
+
+export { industries };

@@ -1,0 +1,9 @@
+# SalesPilot AI
+.next
+node_modules
+out
+dist
+.env*
+!.env.example
+*.log
+.DS_Store
